@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* ─── Roshanal Global Design System ──────────────────────────────────────── */
+
+:root {
+  /* Brand colors */
+  --navy:      #0C1A36;
+  --blue:      #1641C4;
+  --red:       #C8191C;
+  --white:     #FFFFFF;
+  --offwhite:  #F3F5FB;
+  --border:    #E8EBF6;
+  --text-1:    #080E22;
+  --text-2:    #1E2540;
+  --text-3:    #4A5270;
+  --text-4:    #8990AB;
+  --success:   #0B6B3A;
+  --warning:   #9C4B10;
+
+  /* shadcn/ui tokens */
+  --background: 0 0% 100%;
+  --foreground: 222 91% 8%;
+  --card:       0 0% 100%;
+  --card-foreground: 222 91% 8%;
+  --popover:    0 0% 100%;
+  --popover-foreground: 222 91% 8%;
+  --primary:    228 80% 43%;
+  --primary-foreground: 0 0% 100%;
+  --secondary:  222 50% 96%;
+  --secondary-foreground: 222 91% 8%;
+  --muted:      222 50% 96%;
+  --muted-foreground: 222 20% 46%;
+  --accent:     222 50% 93%;
+  --accent-foreground: 222 91% 8%;
+  --destructive: 358 80% 43%;
+  --destructive-foreground: 0 0% 100%;
+  --border:     225 50% 92%;
+  --input:      225 50% 92%;
+  --ring:       228 80% 43%;
+  --radius:     0.5rem;
+}
+
+/* ─── Typography — NON-NEGOTIABLE ───────────────────────────────────────── */
+/* Syne (headings) and Manrope (body) are loaded via next/font             */
+/* JetBrains Mono is loaded via next/font for codes, SKUs, IDs             */
+
+body {
+  background-color: #F3F5FB;
+  color: #080E22;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-syne), sans-serif;
+  line-height: 1.25;
+  color: #080E22;
+}
+
+/* Prices, badges, buttons use Syne */
+.price, .badge-text, .product-name, .brand-name {
+  font-family: var(--font-syne), sans-serif;
+}
+
+/* SKUs, order IDs, API keys, codes */
+code, pre, kbd, .sku, .order-id, .tracking-id, .api-key {
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+/* ─── Skeleton Loader ──────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #E8EBF6 25%, #F3F5FB 50%, #E8EBF6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Product Card ──────────────────────────────────────────────────────── */
+.product-card {
+  background: #fff;
+  border: 1px solid #E8EBF6;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 8px 24px rgba(8,14,34,.10);
+  transform: translateY(-3px);
+}
+
+/* ─── Sale Badge ────────────────────────────────────────────────────────── */
+.sale-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ─── Button base ───────────────────────────────────────────────────────── */
+.btn-primary {
+  background-color: #1641C4;
+  color: #ffffff;
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 8px;
+  padding: 10px 24px;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary:hover  { background-color: #1235a8; }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-danger {
+  background-color: #C8191C;
+  color: #ffffff;
+}
+
+/* ─── Focus visible (accessibility) ────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #1641C4;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Scrollbar (brand-styled) ──────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #F3F5FB; }
+::-webkit-scrollbar-thumb { background: #8990AB; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4A5270; }
+
+/* ─── Selection ─────────────────────────────────────────────────────────── */
+::selection {
+  background-color: #1641C4;
+  color: #ffffff;
+}
+
+/* ─── Backdrop ──────────────────────────────────────────────────────────── */
+.backdrop { 
+  position: fixed; inset: 0; background: rgba(8,14,34,.5);
+  z-index: 40; backdrop-filter: blur(2px);
+}
+
+/* ─── Admin sidebar ─────────────────────────────────────────────────────── */
+.admin-sidebar {
+  background: #0C1A36;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.admin-sidebar .nav-item {
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 13.5px;
+  color: #8990AB;
+  transition: color 0.15s, background 0.15s;
+}
+
+.admin-sidebar .nav-item:hover,
+.admin-sidebar .nav-item.active {
+  color: #fff;
+  background: rgba(255,255,255,.07);
+}
+
+/* ─── Print styles ──────────────────────────────────────────────────────── */
+@media print {
+  .no-print { display: none !important; }
+}
+
+/* ─── Mobile-first base ─────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+img { max-width: 100%; height: auto; }

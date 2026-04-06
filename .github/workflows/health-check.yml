@@ -1,0 +1,13 @@
+name: Site Health Check
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check homepage
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" https://roshanalglobal.com)
+          [ "$status" = "200" ] && echo "OK: $status" || (echo "FAIL: $status" && exit 1)
