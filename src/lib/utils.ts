@@ -39,6 +39,13 @@ export function generateQuoteNumber(sequence: number): string {
 }
 
 /**
+ * Format kobo amount to NGN string (shorthand).
+ */
+export function formatNaira(amountKobo: number): string {
+  return `₦${(amountKobo / 100).toLocaleString('en-NG')}`
+}
+
+/**
  * Format a date string for display.
  */
 export function formatDate(date: string | Date, options?: Intl.DateTimeFormatOptions): string {
