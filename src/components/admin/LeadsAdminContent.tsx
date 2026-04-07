@@ -471,7 +471,7 @@ export default function LeadsAdminContent() {
                     {...register('name')}
                     className="w-full px-4 py-2 border border-brand-border rounded-lg focus:outline-none focus:border-brand-blue"
                   />
-                  {errors.name && <p className="text-brand-red text-xs mt-1">{errors.name.message}</p>}
+                  {errors.name && <p className="text-brand-red text-xs mt-1">{String(errors.name.message)}</p>}
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -481,7 +481,7 @@ export default function LeadsAdminContent() {
                       {...register('email')}
                       className="w-full px-4 py-2 border border-brand-border rounded-lg focus:outline-none focus:border-brand-blue"
                     />
-                    {errors.email && <p className="text-brand-red text-xs mt-1">{errors.email.message}</p>}
+                    {errors.email && <p className="text-brand-red text-xs mt-1">{String(errors.email.message)}</p>}
                   </div>
                   <div>
                     <label className="font-manrope text-sm text-text-2 mb-1 block">Phone</label>
@@ -509,7 +509,7 @@ export default function LeadsAdminContent() {
                       <option key={s} value={s}>{s}</option>
                     ))}
                   </select>
-                  {errors.source && <p className="text-brand-red text-xs mt-1">{errors.source.message}</p>}
+                  {errors.source && <p className="text-brand-red text-xs mt-1">{String(errors.source.message)}</p>}
                 </div>
                 <div>
                   <label className="font-manrope text-sm text-text-2 mb-1 block">Initial Score (0-100)</label>

@@ -86,7 +86,7 @@ export default function InventoryAdminContent() {
   const [showLowStockAlert, setShowLowStockAlert] = useState(false)
   const [chartData, setChartData] = useState<Array<{ name: string; quantity: number; fill: string }>>([])
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<AdjustmentFormData>({
+  const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<AdjustmentFormData>({
     resolver: zodResolver(adjustmentSchema),
     defaultValues: { change: 0, reason: 'adjustment' },
   })
@@ -496,7 +496,7 @@ export default function InventoryAdminContent() {
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => reset({ ...reset(), change: (adjustingItem.quantity || 0) - 1 })}
+                      onClick={() => setValue('change', (adjustingItem.quantity || 0) - 1)}
                       className="p-2 border border-brand-border rounded-lg hover:bg-brand-offwhite"
                     >
                       <Minus className="w-4 h-4" />
@@ -508,7 +508,7 @@ export default function InventoryAdminContent() {
                     />
                     <button
                       type="button"
-                      onClick={() => reset({ ...reset(), change: (adjustingItem.quantity || 0) + 1 })}
+                      onClick={() => setValue('change', (adjustingItem.quantity || 0) + 1)}
                       className="p-2 border border-brand-border rounded-lg hover:bg-brand-offwhite"
                     >
                       <Plus className="w-4 h-4" />

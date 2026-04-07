@@ -388,7 +388,8 @@ export default function EmailCampaignsContent() {
                     contentStyle={{ backgroundColor: '#0C1A36', border: 'none', borderRadius: '8px' }}
                     labelStyle={{ color: '#F3F5FB' }}
                     itemStyle={{ color: '#F3F5FB' }}
-                    formatter={(value: number) => [`${value}%`, '']}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    formatter={(value: any) => [`${value}%`, '']}
                   />
                   <Legend />
                   <Line type="monotone" dataKey="openRate" name="Open Rate" stroke="#1641C4" strokeWidth={2} dot={false} />
