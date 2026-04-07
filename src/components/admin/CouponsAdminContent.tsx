@@ -82,8 +82,10 @@ export default function CouponsAdminContent() {
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null)
   const [usageData, setUsageData] = useState<Array<{ date: string; uses: number }>>([])
 
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors, isSubmitting } } = useForm<CouponFormData>({
-    resolver: zodResolver(couponSchema),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors, isSubmitting } } = useForm<any>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(couponSchema) as any,
     defaultValues: {
       type: 'percentage',
       value: 10,
@@ -537,7 +539,7 @@ export default function CouponsAdminContent() {
                     className="w-full px-4 py-2 border border-brand-border rounded-lg font-mono uppercase focus:outline-none focus:border-brand-blue"
                     placeholder="e.g. SUMMER2026"
                   />
-                  {errors.code && <p className="text-brand-red text-xs mt-1">{errors.code.message}</p>}
+                  {errors.code && <p className="text-brand-red text-xs mt-1">{String(errors.code.message)}</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -559,7 +561,7 @@ export default function CouponsAdminContent() {
                       {...register('value', { valueAsNumber: true })}
                       className="w-full px-4 py-2 border border-brand-border rounded-lg focus:outline-none focus:border-brand-blue"
                     />
-                    {errors.value && <p className="text-brand-red text-xs mt-1">{errors.value.message}</p>}
+                    {errors.value && <p className="text-brand-red text-xs mt-1">{String(errors.value.message)}</p>}
                   </div>
                 </div>
 
