@@ -2,10 +2,6 @@
  * Insforge.dev Database Client
  * DO NOT add any other backend client here.
  * Insforge.dev is the ONLY backend for this project.
- *
- * Note: Until official @insforge/client is published, we use
- * the Supabase-compatible JS client. Types are asserted at
- * the query level using the typed helpers below.
  */
 
 import { createClient } from '@supabase/supabase-js'

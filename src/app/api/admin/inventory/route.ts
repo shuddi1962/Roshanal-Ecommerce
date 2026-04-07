@@ -7,100 +7,60 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const branchId = searchParams.get('branchId')
     const status = searchParams.get('status')
     const search = searchParams.get('search') || ''
+    const page = parseInt(searchParams.get('page') || '1', 10)
+    const limit = parseInt(searchParams.get('limit') || '50', 10)
 
     let query = adminDb
       .from('inventory')
-      .select(`
-        *,
-        products!inner(name, sku),
-        branches!inner(name, city)
-      `)
+      .select('*, products(name, sku, regular_price_kobo), branches(name, city)', { count: 'exact' })
 
     if (branchId && branchId !== 'all') {
       query = query.eq('branch_id', branchId)
     }
 
-    if (status === 'low') {
-      query = query.lte('available_qty', adminDb.ref('low_stock_threshold')).gt('available_qty', 0)
-    } else if (status === 'out') {
-      query = query.eq('available_qty', 0)
-    } else if (status === 'overstocked') {
-      query = query.gt('available_qty', adminDb.ref('low_stock_threshold').multipliedBy(5))
-    }
-
     if (search) {
-      query = query.or(`products.name.ilike.%${search}%,products.sku.ilike.%${search}%`)
+      query = query.or(`product_id.eq.${search}`)
     }
 
-    const { data: inventory, error } = await query.order('updated_at', { ascending: false })
+    const { data: inventory, error, count } = await query.range((page - 1) * limit, page * limit - 1)
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // Calculate stats
-    const totalSKUs = inventory?.length ?? 0
-    const lowStock = inventory?.filter((i: { available_qty: number; low_stock_threshold: number }) => 
-      i.available_qty <= i.low_stock_threshold && i.available_qty > 0
+    const totalSKUs = count ?? 0
+    const lowStock = inventory?.filter((i: any) => 
+      (i.quantity - i.reserved_qty) <= i.low_stock_threshold && (i.quantity - i.reserved_qty) > 0
     ).length ?? 0
-    const outOfStock = inventory?.filter((i: { available_qty: number }) => i.available_qty === 0).length ?? 0
-    const reserved = inventory?.reduce((sum: number, i: { reserved_qty: number }) => sum + (i.reserved_qty || 0), 0) ?? 0
-    const totalQuantity = inventory?.reduce((sum: number, i: { quantity: number }) => sum + (i.quantity || 0), 0) ?? 0
+    const outOfStock = inventory?.filter((i: any) => (i.quantity - i.reserved_qty) <= 0).length ?? 0
 
-    // Format inventory items
-    const formattedInventory = inventory?.map((item: { 
-      id: string
-      product_id: string
-      products: { name: string; sku: string }
-      branch_id: string
-      branches: { name: string; city: string }
-      quantity: number
-      reserved_qty: number
-      available_qty: number
-      low_stock_threshold: number
-      updated_at: string
-    }) => {
-      const available = item.available_qty ?? (item.quantity - (item.reserved_qty || 0))
-      let status: 'in_stock' | 'low_stock' | 'out_of_stock' | 'overstocked' = 'in_stock'
-      if (available <= 0) status = 'out_of_stock'
-      else if (available <= item.low_stock_threshold) status = 'low_stock'
-      else if (available > item.low_stock_threshold * 5) status = 'overstocked'
+    const formattedInventory = inventory?.map((item: any) => {
+      const available = item.quantity - (item.reserved_qty || 0)
+      let itemStatus: 'in_stock' | 'low_stock' | 'out_of_stock' = 'in_stock'
+      if (available <= 0) itemStatus = 'out_of_stock'
+      else if (available <= (item.low_stock_threshold || 5)) itemStatus = 'low_stock'
 
       return {
         id: item.id,
         product_id: item.product_id,
         product_name: item.products?.name || 'Unknown',
         sku: item.products?.sku || 'N/A',
+        price: item.products?.regular_price_kobo || 0,
         branch_id: item.branch_id,
         branch_name: item.branches?.name || 'Unknown',
         quantity: item.quantity || 0,
         reserved_qty: item.reserved_qty || 0,
         available_qty: available,
-        low_stock_threshold: item.low_stock_threshold || 10,
-        status,
-        last_updated: item.updated_at,
+        low_stock_threshold: item.low_stock_threshold || 5,
+        status: itemStatus,
+        last_updated: item.created_at,
       }
     }) ?? []
 
-    // Get branch totals for chart
-    const branchTotals = formattedInventory.reduce((acc: Record<string, { name: string; quantity: number }>, item) => {
-      if (!acc[item.branch_id]) {
-        acc[item.branch_id] = { name: item.branch_name, quantity: 0 }
-      }
-      acc[item.branch_id].quantity += item.quantity
-      return acc
-    }, {})
-
     return NextResponse.json({
       inventory: formattedInventory,
-      stats: {
-        totalSKUs,
-        lowStock,
-        outOfStock,
-        reserved,
-        totalQuantity,
-      },
-      inventoryByBranch: Object.values(branchTotals),
+      stats: { totalSKUs, lowStock, outOfStock },
+      pagination: { page, limit, total: totalSKUs, totalPages: Math.ceil(totalSKUs / limit) }
     })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch inventory' }, { status: 500 })
@@ -110,56 +70,29 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
-    const { inventoryId, change, reason, notes, staffId } = body
+    const { product_id, branch_id, quantity, low_stock_threshold } = body
 
-    if (!inventoryId || typeof change !== 'number' || !reason) {
+    if (!product_id || !branch_id || quantity === undefined) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Get current inventory
-    const { data: current, error: fetchError } = await adminDb
+    const { data, error } = await adminDb
       .from('inventory')
-      .select('quantity, reserved_qty')
-      .eq('id', inventoryId)
+      .insert({
+        product_id,
+        branch_id,
+        quantity,
+        reserved_qty: 0,
+        low_stock_threshold: low_stock_threshold || 5,
+        allow_backorder: false,
+      })
+      .select()
       .single()
 
-    if (fetchError || !current) {
-      return NextResponse.json({ error: 'Inventory item not found' }, { status: 404 })
-    }
+    if (error) throw error
 
-    const newQuantity = (current.quantity || 0) + change
-    if (newQuantity < 0) {
-      return NextResponse.json({ error: 'Insufficient stock' }, { status: 400 })
-    }
-
-    const availableQty = newQuantity - (current.reserved_qty || 0)
-
-    // Update inventory
-    const { error: updateError } = await adminDb
-      .from('inventory')
-      .update({
-        quantity: newQuantity,
-        available_qty: availableQty,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', inventoryId)
-
-    if (updateError) {
-      return NextResponse.json({ error: updateError.message }, { status: 500 })
-    }
-
-    // Log adjustment
-    await adminDb.from('inventory_adjustments').insert({
-      inventory_id: inventoryId,
-      change,
-      reason,
-      notes: notes || null,
-      staff_id: staffId || null,
-      created_at: new Date().toISOString(),
-    })
-
-    return NextResponse.json({ success: true, newQuantity, availableQty })
-  } catch {
-    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+    return NextResponse.json({ inventory: data, message: 'Inventory created' }, { status: 201 })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Failed to create inventory' }, { status: 500 })
   }
 }

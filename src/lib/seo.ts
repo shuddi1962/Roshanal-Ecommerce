@@ -13,7 +13,7 @@ const SITE_NAME = 'Roshanal Global'
 
 export interface SEOParams {
   title: string
-  description: string
+  description?: string
   path: string
   image?: string
   noIndex?: boolean
@@ -29,10 +29,11 @@ export interface SEOParams {
 export function generateMetadata(params: SEOParams): Metadata {
   const url = `${SITE_URL}${params.path}`
   const image = params.image ?? `${SITE_URL}/og-default.png`
+  const description = params.description ?? `${params.title} - Shop security systems, marine equipment, boat engines, and professional services from Roshanal Global.`
 
   return {
     title: `${params.title} | ${SITE_NAME}`,
-    description: params.description,
+    description,
     keywords: params.keywords?.join(', '),
     alternates: { canonical: url },
     robots: params.noIndex ? { index: false, follow: false } : { index: true, follow: true },

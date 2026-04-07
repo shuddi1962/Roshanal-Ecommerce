@@ -8,7 +8,7 @@ export const metadata: Metadata = genMeta({
   title: 'Shopping Cart — Roshanal Global',
   description: 'Review your shopping cart and proceed to checkout.',
   path: '/cart',
-  robots: { index: false },
+  noIndex: true,
 })
 
 export default async function CartPage() {

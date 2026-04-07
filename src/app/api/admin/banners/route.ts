@@ -1,57 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminDb } from '@/lib/db'
 
-interface Banner {
-  id: string
-  title: string
-  image_url: string
-  link_url: string
-  position: 'homepage_hero' | 'shop_banner' | 'popup' | 'sidebar'
-  sizes: string
-  sort_order: number
-  is_active: boolean
-  starts_at?: string
-  ends_at?: string
-  popup_trigger?: 'exit_intent' | 'after_5s' | 'after_30s_scroll' | 'once_per_session'
-  created_at: string
-  updated_at: string
-}
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const position = searchParams.get('position')
     const page = parseInt(searchParams.get('page') || '1', 10)
     const limit = parseInt(searchParams.get('limit') || '20', 10)
-    const offset = (page - 1) * limit
 
-    let query = 'SELECT * FROM banners'
-    const params: (string | number)[] = []
+    let query = adminDb
+      .from('banners')
+      .select('*', { count: 'exact' })
+      .order('sort_order', { ascending: true })
+      .range((page - 1) * limit, page * limit - 1)
 
     if (position) {
-      query += ' WHERE position = ?'
-      params.push(position)
+      query = query.eq('position', position)
     }
 
-    query += ' ORDER BY sort_order ASC, created_at DESC LIMIT ? OFFSET ?'
-    params.push(limit, offset)
+    const { data, error, count } = await query
 
-    const banners = await adminDb.query<Banner>(query, params)
-
-    const countQuery = position
-      ? 'SELECT COUNT(*) as total FROM banners WHERE position = ?'
-      : 'SELECT COUNT(*) as total FROM banners'
-    const countParams = position ? [position] : []
-    const countResult = await adminDb.query<{ total: number }>(countQuery, countParams)
-    const total = countResult[0]?.total || 0
+    if (error) throw error
 
     return NextResponse.json({
-      banners,
+      banners: data ?? [],
       pagination: {
         page,
         limit,
-        total,
-        totalPages: Math.ceil(total / limit),
+        total: count ?? 0,
+        totalPages: Math.ceil((count ?? 0) / limit),
       },
     })
   } catch (error) {
@@ -86,27 +63,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const result = await adminDb.query<{ id: string }>(
-      `INSERT INTO banners 
-       (title, image_url, link_url, position, sizes, sort_order, is_active, starts_at, ends_at, popup_trigger, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
-       RETURNING id`,
-      [
+    const { data, error } = await adminDb
+      .from('banners')
+      .insert({
         title,
         image_url,
         link_url,
         position,
-        sizes || '{}',
-        sort_order || 0,
-        is_active ? 1 : 0,
-        starts_at || null,
-        ends_at || null,
-        popup_trigger || null,
-      ]
-    )
+        sizes: sizes || '{}',
+        sort_order: sort_order || 0,
+        is_active: is_active ?? true,
+        starts_at: starts_at || null,
+        ends_at: ends_at || null,
+        popup_trigger: popup_trigger || null,
+      })
+      .select()
+      .single()
+
+    if (error) throw error
 
     return NextResponse.json(
-      { id: result[0]?.id, message: 'Banner created successfully' },
+      { id: data.id, banner: data, message: 'Banner created successfully' },
       { status: 201 }
     )
   } catch (error) {

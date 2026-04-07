@@ -1,48 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminDb } from '@/lib/db'
 
-interface EmailCampaign {
-  id: string
-  name: string
-  subject: string
-  preview_text?: string
-  from_name: string
-  from_email: string
-  template: string
-  audience: string
-  status: 'draft' | 'scheduled' | 'sending' | 'sent' | 'paused'
-  scheduled_at?: string
-  sent_at?: string
-  recipients_count: number
-  open_rate?: number
-  click_rate?: number
-}
-
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-    const campaigns = await adminDb.query<EmailCampaign>(
-      'SELECT * FROM email_campaigns WHERE id = ?',
-      [id]
-    )
+    const { data, error } = await adminDb
+      .from('email_campaigns')
+      .select('*')
+      .eq('id', id)
+      .single()
 
-    if (!campaigns.length) {
-      return NextResponse.json(
-        { error: 'Campaign not found' },
-        { status: 404 }
-      )
+    if (error || !data) {
+      return NextResponse.json({ error: 'Campaign not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ campaign: campaigns[0] })
+    return NextResponse.json({ campaign: data })
   } catch (error) {
     console.error('Failed to fetch campaign:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch campaign' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch campaign' }, { status: 500 })
   }
 }
 
@@ -53,119 +31,69 @@ export async function PATCH(
   try {
     const { id } = await params
     const body = await request.json()
-    const {
-      name,
-      subject,
-      preview_text,
-      from_name,
-      from_email,
-      template,
-      audience,
-      scheduled_at,
-      status,
-    } = body
 
-    const campaigns = await adminDb.query<EmailCampaign>(
-      'SELECT * FROM email_campaigns WHERE id = ?',
-      [id]
-    )
+    const { data: existing } = await adminDb
+      .from('email_campaigns')
+      .select('*')
+      .eq('id', id)
+      .single()
 
-    if (!campaigns.length) {
-      return NextResponse.json(
-        { error: 'Campaign not found' },
-        { status: 404 }
-      )
+    if (!existing) {
+      return NextResponse.json({ error: 'Campaign not found' }, { status: 404 })
     }
 
-    const updates: string[] = []
-    const values: (string | null)[] = []
+    const updateData: Record<string, any> = {}
+    const fields = ['name', 'subject', 'preview_text', 'from_name', 'from_email', 'template', 'audience', 'scheduled_at', 'status', 'content_html', 'sent_count', 'open_rate', 'click_rate']
 
-    if (name !== undefined) {
-      updates.push('name = ?')
-      values.push(name)
-    }
-    if (subject !== undefined) {
-      updates.push('subject = ?')
-      values.push(subject)
-    }
-    if (preview_text !== undefined) {
-      updates.push('preview_text = ?')
-      values.push(preview_text)
-    }
-    if (from_name !== undefined) {
-      updates.push('from_name = ?')
-      values.push(from_name)
-    }
-    if (from_email !== undefined) {
-      updates.push('from_email = ?')
-      values.push(from_email)
-    }
-    if (template !== undefined) {
-      updates.push('template = ?')
-      values.push(template)
-    }
-    if (audience !== undefined) {
-      updates.push('audience = ?')
-      values.push(audience)
-    }
-    if (scheduled_at !== undefined) {
-      updates.push('scheduled_at = ?')
-      values.push(scheduled_at)
-    }
-    if (status !== undefined) {
-      updates.push('status = ?')
-      values.push(status)
+    for (const field of fields) {
+      if (body[field] !== undefined) {
+        updateData[field] = body[field]
+      }
     }
 
-    if (updates.length === 0) {
-      return NextResponse.json(
-        { error: 'No fields to update' },
-        { status: 400 }
-      )
-    }
+    const { data, error } = await adminDb
+      .from('email_campaigns')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single()
 
-    updates.push("updated_at = datetime('now')")
-    values.push(id)
+    if (error) throw error
 
-    await adminDb.query(
-      `UPDATE email_campaigns SET ${updates.join(', ')} WHERE id = ?`,
-      values
-    )
-
-    if (status === 'sending') {
-      await triggerCampaignSend(id)
-    }
-
-    return NextResponse.json({
-      message: 'Campaign updated successfully',
-    })
+    return NextResponse.json({ campaign: data, message: 'Campaign updated successfully' })
   } catch (error) {
     console.error('Failed to update campaign:', error)
-    return NextResponse.json(
-      { error: 'Failed to update campaign' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update campaign' }, { status: 500 })
   }
 }
 
-async function triggerCampaignSend(campaignId: string) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const campaigns = await adminDb.query<EmailCampaign>(
-      'SELECT * FROM email_campaigns WHERE id = ?',
-      [campaignId]
-    )
+    const { id } = await params
 
-    if (!campaigns.length) return
+    const { data: existing } = await adminDb
+      .from('email_campaigns')
+      .select('id')
+      .eq('id', id)
+      .single()
 
-    await adminDb.query(
-      "UPDATE email_campaigns SET status = 'sent', sent_at = datetime('now') WHERE id = ?",
-      [campaignId]
-    )
+    if (!existing) {
+      return NextResponse.json({ error: 'Campaign not found' }, { status: 404 })
+    }
+
+    const { error } = await adminDb
+      .from('email_campaigns')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+
+    return NextResponse.json({ message: 'Campaign deleted successfully' })
   } catch (error) {
-    console.error('Failed to trigger campaign send:', error)
-    await adminDb.query(
-      "UPDATE email_campaigns SET status = 'paused' WHERE id = ?",
-      [campaignId]
-    )
+    console.error('Failed to delete campaign:', error)
+    return NextResponse.json({ error: 'Failed to delete campaign' }, { status: 500 })
   }
 }
