@@ -117,3 +117,48 @@ export async function sendOrderConfirmation(params: {
 
   await sendEmail({ to: params.to, subject: `Order Confirmed — ${params.orderNumber} | Roshanal Global`, html })
 }
+
+export interface BoatEnquiryEmailParams {
+  customerName: string; customerEmail: string; customerPhone: string
+  vesselType: string; enquiryType: string; budget?: string
+  timeline?: string; notes?: string
+}
+
+export async function sendBoatEnquiryEmail(params: BoatEnquiryEmailParams): Promise<void> {
+  const html = `
+<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#F3F5FB;font-family:sans-serif;">
+  <div style="max-width:600px;margin:40px auto;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #E8EBF6;">
+    <div style="background:#0C1A36;padding:32px;text-align:center;">
+      <h1 style="color:#fff;margin:0;font-size:24px;">ROSHANAL GLOBAL</h1>
+      <p style="color:#8990AB;margin:4px 0 0;">Boat Building Enquiry</p>
+    </div>
+    <div style="padding:32px;">
+      <h2 style="color:#080E22;margin-top:0;">New Boat Building Enquiry</h2>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:8px 0;color:#4A5270;font-size:14px;"><strong>Customer:</strong></td><td style="padding:8px 0;color:#080E22;">${params.customerName}</td></tr>
+        <tr><td style="padding:8px 0;color:#4A5270;font-size:14px;"><strong>Email:</strong></td><td style="padding:8px 0;"><a href="mailto:${params.customerEmail}" style="color:#1641C4;">${params.customerEmail}</a></td></tr>
+        <tr><td style="padding:8px 0;color:#4A5270;font-size:14px;"><strong>Phone:</strong></td><td style="padding:8px 0;color:#080E22;">${params.customerPhone}</td></tr>
+        <tr><td style="padding:8px 0;color:#4A5270;font-size:14px;"><strong>Vessel Type:</strong></td><td style="padding:8px 0;color:#080E22;">${params.vesselType}</td></tr>
+        <tr><td style="padding:8px 0;color:#4A5270;font-size:14px;"><strong>Action:</strong></td><td style="padding:8px 0;color:#080E22;">${params.enquiryType}</td></tr>
+        ${params.budget ? `<tr><td style="padding:8px 0;color:#4A5270;"><strong>Budget:</strong></td><td style="padding:8px 0;color:#080E22;">${params.budget}</td></tr>` : ''}
+        ${params.timeline ? `<tr><td style="padding:8px 0;color:#4A5270;"><strong>Timeline:</strong></td><td style="padding:8px 0;color:#080E22;">${params.timeline}</td></tr>` : ''}
+        ${params.notes ? `<tr><td style="padding:8px 0;color:#4A5270;vertical-align:top;"><strong>Notes:</strong></td><td style="padding:8px 0;color:#080E22;">${params.notes}</td></tr>` : ''}
+      </table>
+      <p style="color:#4A5270;font-size:14px;margin-top:24px;">
+        Respond to this enquiry within 24 hours.
+      </p>
+    </div>
+    <div style="background:#F3F5FB;padding:20px;text-align:center;border-top:1px solid #E8EBF6;">
+      <p style="margin:0;font-size:12px;color:#8990AB;">Roshanal Infotech Limited — 14 Aba Road, Port Harcourt, Nigeria</p>
+    </div>
+  </div>
+</body></html>`
+
+  await sendEmail({
+    to: 'boatbuilding@roshanalglobal.com',
+    subject: `New Enquiry — ${params.vesselType} from ${params.customerName} | Roshanal Global`,
+    html,
+    tags: [{ name: 'type', value: 'boat-enquiry' }, { name: 'source', value: 'boat-configurator' }],
+  })
+}

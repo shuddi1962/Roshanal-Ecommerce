@@ -110,9 +110,9 @@
 - [ ] Orders + Fulfillment
 - [ ] Payments (all gateways)
 - [ ] Booking System (all services)
-- [ ] Boat Building Configurator
-- [ ] Boat Engines Category
-- [ ] Kitchen Installation Page
+- [x] Boat Building Configurator
+- [x] Boat Engines Category
+- [x] Kitchen Installation Page
 - [ ] Multivendor System
 - [ ] Vendor Ad Platform
 - [ ] CRM + Acquisition Engine

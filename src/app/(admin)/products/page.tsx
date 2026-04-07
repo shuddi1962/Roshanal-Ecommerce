@@ -1,13 +1,22 @@
 import type { Metadata } from 'next'
-import AdminProductsContent from '@/components/admin/AdminProductsContent'
+import { Suspense } from 'react'
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
+import ProductUploadContent from '@/components/admin/AdminProductsContent'
+import { generateMetadata as genMeta } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Products | Admin',
-  robots: { index: false },
-}
+export const metadata: Metadata = genMeta({
+  title: 'Products — Admin',
+  path: '/admin/products',
+})
 
-export const dynamic = 'force-dynamic'
+export default async function AdminProductsPage() {
+  const session = await auth()
+  if (!session?.user) redirect('/auth/login')
 
-export default function AdminProductsPage() {
-  return <AdminProductsContent />
+  return (
+    <Suspense fallback={<div className="h-screen bg-brand-offwhite animate-pulse" />}>
+      <ProductUploadContent />
+    </Suspense>
+  )
 }

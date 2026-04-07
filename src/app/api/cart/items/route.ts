@@ -8,8 +8,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const { data: products } = await db
     .from('products')
     .select('id, name, slug, sku, regular_price_kobo, sale_price_kobo, images, brands:brand_id(name)')
-    .in('id', ids.slice(0, 50)) // max 50
+    .in('id', ids.slice(0, 50))
     .eq('is_active', true)
+    .eq('is_draft', false)
 
   const formatted = (products ?? []).map((p) => {
     const images = (p.images as Array<{ small?: string; url?: string }>) ?? []
@@ -23,6 +24,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       salePriceKobo: p.sale_price_kobo,
       image: images[0]?.small ?? images[0]?.url,
       brand: brand?.name ?? '',
+      inStock: true,
+      maxQty: 99,
     }
   })
 

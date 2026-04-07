@@ -2,6 +2,7 @@
 
 import React, { Suspense } from 'react'
 import dynamic from 'next/dynamic'
+import { SlotProvider } from '@/components/slots/ComponentSlot'
 
 const SiteHeader = dynamic(() => import('@/components/shared/SiteHeader'), { ssr: true })
 const SiteFooter = dynamic(() => import('@/components/shared/SiteFooter'), { ssr: true })
@@ -10,8 +11,8 @@ const CookieConsentBanner = dynamic(() => import('@/components/shared/CookieCons
 
 export default function StoreLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <Suspense fallback={<div className="h-[148px] bg-brand-navy" />}>
+    <SlotProvider>
+      <Suspense fallback={<div className="h-[148px] bg-[#0C1A36]" />}>
         <SiteHeader />
       </Suspense>
 
@@ -23,15 +24,13 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
         <SiteFooter />
       </Suspense>
 
-      {/* Feature-flagged: AI Support Chat */}
       <Suspense fallback={null}>
         <AISupportChat />
       </Suspense>
 
-      {/* GDPR/NDPR Cookie Consent */}
       <Suspense fallback={null}>
         <CookieConsentBanner />
       </Suspense>
-    </>
+    </SlotProvider>
   )
 }

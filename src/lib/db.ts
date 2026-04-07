@@ -17,8 +17,6 @@ if (!process.env.INSFORGE_ANON_KEY) {
   throw new Error('INSFORGE_ANON_KEY environment variable is required')
 }
 
-// Public/anon client — used in server components and API routes with RLS
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const db = createClient<any>(
   process.env.INSFORGE_URL,
   process.env.INSFORGE_ANON_KEY,
@@ -30,8 +28,6 @@ export const db = createClient<any>(
   }
 )
 
-// Service-role client — bypasses RLS, used ONLY in trusted server contexts
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const adminDb = createClient<any>(
   process.env.INSFORGE_URL,
   process.env.INSFORGE_SERVICE_KEY ?? process.env.INSFORGE_ANON_KEY,
@@ -43,11 +39,7 @@ export const adminDb = createClient<any>(
   }
 )
 
-/**
- * Create a client authenticated as a specific user (via JWT)
- */
 export function createUserDb(accessToken: string) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return createClient<any>(
     process.env.INSFORGE_URL!,
     process.env.INSFORGE_ANON_KEY!,

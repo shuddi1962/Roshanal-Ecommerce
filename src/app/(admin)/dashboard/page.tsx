@@ -1,16 +1,18 @@
 import type { Metadata } from 'next'
-import { generateMetadata as genMeta } from '@/lib/seo'
+import { Suspense } from 'react'
 import AdminDashboardContent from '@/components/admin/AdminDashboardContent'
+import { generateMetadata as genMeta } from '@/lib/seo'
 
 export const metadata: Metadata = genMeta({
-  title: 'Admin Dashboard',
-  description: 'Roshanal Global Admin Dashboard',
+  title: 'Admin Dashboard — Roshanal Global',
+  description: 'Roshanal Global admin dashboard overview.',
   path: '/admin/dashboard',
-  noIndex: true,
 })
 
-export const dynamic = 'force-dynamic'
-
 export default function AdminDashboardPage() {
-  return <AdminDashboardContent />
+  return (
+    <Suspense fallback={<div className="h-screen bg-brand-offwhite animate-pulse" />}>
+      <AdminDashboardContent />
+    </Suspense>
+  )
 }
