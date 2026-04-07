@@ -14,13 +14,9 @@ const nextConfig: NextConfig = {
         hostname: 'roshanalglobal.com',
       },
     ],
-    minimumCacheTTL: 60,
   },
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 }
 

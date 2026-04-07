@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Roshanal Ecommerce - AI Commerce Operating System
 
-## Getting Started
+A comprehensive Nigerian e-commerce platform for security systems, marine equipment, boat engines, and professional services.
 
-First, run the development server:
+## Quick Deploy
 
+### Vercel (Recommended)
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm i -g vercel
+vercel
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Netlify
+```bash
+npm i -g netlify-cli
+netlify deploy
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Render
+- Connect GitHub repo
+- Build command: npm run build
+- Publish directory: .next
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables Required
 
-## Learn More
+Create a .env.local file with:
 
-To learn more about Next.js, take a look at the following resources:
+```
+INSFORGE_URL=your-insforge-url
+INSFORGE_ANON_KEY=your-anon-key
+INSFORGE_SERVICE_KEY=your-service-key
+NEXTAUTH_SECRET=generate-with-openssl-rand-base64-32
+NEXTAUTH_URL=https://your-domain.com
+ENCRYPTION_KEY=32-char-random-string
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Test Accounts (after seeding)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@roshanalglobal.com | admin123 |
+| Staff | staff@roshanalglobal.com | staff123 |
+| Customer | customer@test.com | customer123 |
+| Vendor | vendor@roshanalglobal.com | vendor123 |
 
-## Deploy on Vercel
+## Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Full admin dashboard with analytics
+- Multi-vendor marketplace
+- Boat building configurator
+- Kitchen installation booking
+- POS system
+- CRM and lead management
+- Email campaigns
+- Inventory management
+- Geolocation and currency conversion
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech Stack
+
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS
+- InsForge.dev (Backend)
+- NextAuth v5 (Auth)
+- Recharts (Charts)
+- Framer Motion (Animations)
