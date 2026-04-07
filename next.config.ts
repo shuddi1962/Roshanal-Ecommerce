@@ -26,24 +26,6 @@ const nextConfig: NextConfig = {
       ],
     },
   ],
-  // Redirect /admin → /admin/dashboard
-  redirects: async () => [
-    {
-      source: '/admin',
-      destination: '/admin/dashboard',
-      permanent: false,
-    },
-    {
-      source: '/vendor',
-      destination: '/vendor/dashboard',
-      permanent: false,
-    },
-    {
-      source: '/account',
-      destination: '/account/dashboard',
-      permanent: false,
-    },
-  ],
   typescript: {
     ignoreBuildErrors: false,
   },
