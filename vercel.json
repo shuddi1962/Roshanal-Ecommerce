@@ -1,11 +1,4 @@
 {
-  "crons": [
-    { "path": "/api/cron/site-doctor", "schedule": "*/15 * * * *" },
-    { "path": "/api/cron/currency", "schedule": "0 * * * *" },
-    { "path": "/api/cron/research-agent", "schedule": "0 0 * * *" },
-    { "path": "/api/cron/competitor-monitor", "schedule": "0 */6 * * *" },
-    { "path": "/api/cron/voice-agent-sync", "schedule": "0 0 * * *" }
-  ],
   "headers": [
     {
       "source": "/(admin)(.*)",
@@ -22,7 +15,5 @@
       ]
     }
   ],
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
   "framework": "nextjs"
 }
