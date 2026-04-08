@@ -1,12 +1,5 @@
-'use client'
-
-import dynamic from 'next/dynamic'
-
-const ShopPageContent = dynamic(
-  () => import('@/components/shop/ShopPageContent'),
-  { ssr: false }
-)
+import { redirect } from 'next/navigation'
 
 export default function StorePage() {
-  return <ShopPageContent />
+  redirect('/')
 }
