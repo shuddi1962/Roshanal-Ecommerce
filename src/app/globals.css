@@ -50,31 +50,154 @@ body {
   font-family: var(--font-manrope), sans-serif;
 }
 
-/* Ensure brand colors are applied */
-.bg-navy { background-color: #0C1A36 !important; }
-.text-navy { color: #0C1A36 !important; }
-.bg-blue { background-color: #1641C4 !important; }
-.text-blue { color: #1641C4 !important; }
-.border-blue { border-color: #1641C4 !important; }
-.bg-red { background-color: #C8191C !important; }
-.text-red { color: #C8191C !important; }
-.bg-brand-navy { background-color: #0C1A36 !important; }
-.text-brand-navy { color: #0C1A36 !important; }
+/* Ensure brand colors are applied with high specificity */
+.bg-navy,
+div.bg-navy,
+section.bg-navy,
+header.bg-navy,
+footer.bg-navy,
+nav.bg-navy {
+  background-color: #0C1A36 !important;
+}
+
+.text-navy,
+.text-navy *,
+span.text-navy,
+p.text-navy,
+h1.text-navy,
+h2.text-navy,
+h3.text-navy,
+h4.text-navy {
+  color: #0C1A36 !important;
+}
+
+.bg-blue,
+div.bg-blue,
+nav.bg-blue,
+button.bg-blue,
+a.bg-blue {
+  background-color: #1641C4 !important;
+}
+
+.text-blue,
+.text-blue *,
+span.text-blue,
+p.text-blue,
+a.text-blue,
+button.text-blue {
+  color: #1641C4 !important;
+}
+
+.border-blue,
+.border-blue *,
+input.border-blue:focus,
+select.border-blue:focus,
+textarea.border-blue:focus {
+  border-color: #1641C4 !important;
+}
+
+.bg-red,
+button.bg-red,
+.bg-red:hover {
+  background-color: #C8191C !important;
+}
+
+.text-red,
+.text-red *,
+span.text-red {
+  color: #C8191C !important;
+}
+
+/* Footer specific overrides */
+footer {
+  background-color: #0C1A36 !important;
+}
+
+footer *,
+footer h1,
+footer h2,
+footer h3,
+footer h4,
+footer p,
+footer span,
+footer a:not(.text-blue):not(.text-red) {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+footer a:hover {
+  color: #ffffff !important;
+}
+
+/* Topbar specific overrides */
+.hidden.lg\\:flex.bg-navy,
+.bg-navy.text-white\\/70 {
+  background-color: #0C1A36 !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
 
 /* Ensure fonts load properly */
 .font-syne { font-family: var(--font-syne), sans-serif !important; }
 .font-manrope { font-family: var(--font-manrope), sans-serif !important; }
 
-/* Navigation visibility */
-nav.bg-blue {
+/* Navigation specific overrides */
+nav.bg-blue,
+nav[class*="bg-blue"] {
   background-color: #1641C4 !important;
   color: white !important;
 }
 
-/* Ensure footer is visible */
-footer.bg-navy {
+nav.bg-blue *,
+nav[class*="bg-blue"] * {
+  color: inherit;
+}
+
+/* Notice bar/topbar overrides */
+.bg-navy,
+.bg-navy.text-white\\/70,
+.hidden.lg\\:flex.bg-navy {
   background-color: #0C1A36 !important;
   color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Footer comprehensive overrides */
+footer,
+footer.bg-navy {
+  background-color: #0C1A36 !important;
+}
+
+footer *,
+footer .text-white\\/70,
+footer p,
+footer span,
+footer div:not(.bg-white):not(.text-blue):not(.text-red) {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+footer h1,
+footer h2,
+footer h3,
+footer h4,
+footer .font-bold {
+  color: #ffffff !important;
+}
+
+footer a:not(.text-blue):not(.text-red) {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+footer a:hover:not(.text-blue):not(.text-red) {
+  color: #ffffff !important;
+}
+
+/* Ensure all interactive elements maintain proper colors */
+button.bg-red:hover,
+.bg-red:hover {
+  background-color: #a0171a !important;
+}
+
+button.bg-blue:hover,
+.bg-blue:hover {
+  background-color: #1338a8 !important;
 }
 
 /* Mobile menu button visibility */
@@ -90,11 +213,60 @@ nav {
   visibility: visible !important;
 }
 
+/* Shimmer background for notice bar */
+.shimmer-bg {
+  background: linear-gradient(90deg, #0C1A36 0%, #1641C4 50%, #0C1A36 100%);
+  background-size: 200% 100%;
+}
+
 /* Ensure all text is sharp */
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Force all brand elements to use proper colors */
+[class*="bg-navy"],
+[class*="text-navy"],
+[class*="bg-blue"],
+[class*="text-blue"],
+[class*="bg-red"],
+[class*="text-red"] {
+  /* These are handled by the specific rules above */
+}
+
+/* Override any Tailwind defaults that might conflict */
+.bg-blue-50,
+.bg-blue-500,
+.bg-red-500,
+.bg-red-600 {
+  /* These might conflict with our brand colors */
+}
+
+/* Ensure all navigation elements are visible */
+nav,
+nav *,
+.navigation,
+.navigation * {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force footer links to be visible */
+footer a {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+footer a:hover {
+  color: #ffffff !important;
+}
+
+/* Topbar specific styling */
+.topbar,
+.notice-bar {
+  background-color: #0C1A36 !important;
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
