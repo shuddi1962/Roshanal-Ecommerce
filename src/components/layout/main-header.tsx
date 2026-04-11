@@ -8,6 +8,7 @@ import {
   User,
   Package,
   X,
+  Menu,
 } from "lucide-react";
 import { useCartStore } from "@/store/cart-store";
 import { useUIStore } from "@/store/ui-store";
@@ -17,7 +18,7 @@ import Link from "next/link";
 
 export default function MainHeader() {
   const { getItemCount, getTotal } = useCartStore();
-  const { compareItems, wishlistItems } = useUIStore();
+  const { compareItems, wishlistItems, mobileMenuOpen, setMobileMenuOpen } = useUIStore();
   const { formatPrice } = useCurrencyStore();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -38,6 +39,14 @@ export default function MainHeader() {
             </div>
           </div>
         </Link>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="lg:hidden text-text-3 hover:text-blue transition-colors"
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
 
         {/* Search Bar */}
         <div className="flex-1 max-w-2xl relative">
