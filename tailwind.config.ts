@@ -20,6 +20,10 @@ const config: Config = {
           offwhite:'#F3F5FB',
           border:  '#E8EBF6',
         },
+        // Alias brand colors for easier use
+        navy: '#0C1A36',
+        blue: '#1641C4',
+        red:  '#C8191C',
         text: {
           1: '#080E22',
           2: '#1E2540',

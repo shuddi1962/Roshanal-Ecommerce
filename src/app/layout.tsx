@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Syne, Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/providers/auth-provider";
 import ClientLayout from "@/components/layout/client-layout";
@@ -10,6 +11,24 @@ import SocialProofPopup from "@/components/notifications/social-proof-popup";
 import AIChatWidget from "@/components/chat/ai-chat-widget";
 import WhatsAppButton from "@/components/chat/whatsapp-button";
 import CampaignPopup from "@/components/popups/campaign-popup";
+
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-syne",
+  display: "swap",
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -45,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${syne.variable} ${manrope.variable} ${jetbrainsMono.variable}`}>
       <head>
         <meta name="theme-color" content="#0C1A36" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
