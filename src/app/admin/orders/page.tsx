@@ -15,7 +15,7 @@ import {
   Printer,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AdminShell from "@/components/admin/admin-shell";
+
 
 const demoOrders = [
   { id: "RSH-2026-001234", customer: "John Doe", email: "john@example.com", date: "Apr 2, 2026", status: "in-transit", payment: "paid", items: 3, total: 340000, branch: "Port Harcourt" },

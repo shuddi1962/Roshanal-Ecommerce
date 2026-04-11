@@ -18,7 +18,7 @@ import {
   Palette,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AdminShell from "@/components/admin/admin-shell";
+
 import HeroSlider, { type BannerTransition, type HeroSlide } from "@/components/banner/hero-slider";
 
 const allTransitions: { value: BannerTransition; label: string; description: string }[] = [

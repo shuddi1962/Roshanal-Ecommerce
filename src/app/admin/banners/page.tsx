@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import AdminShell from "@/components/admin/admin-shell";
+
 import { Image, Plus, Eye, Edit, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
 
 const demoBanners = [

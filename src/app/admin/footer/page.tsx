@@ -18,7 +18,7 @@ import {
   Type,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AdminShell from "@/components/admin/admin-shell";
+
 
 interface FooterColumn {
   id: string;

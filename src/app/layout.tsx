@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import AuthProvider from "@/components/providers/auth-provider";
 import ClientLayout from "@/components/layout/client-layout";
-import GeoInitializer from "@/components/geo/geo-initializer";
-import CookieConsent from "@/components/geo/cookie-consent";
-import ServiceWorkerRegister from "@/components/pwa/sw-register";
 
 export const metadata: Metadata = {
   title: {
@@ -46,12 +42,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="antialiased bg-off-white text-text-1">
-        <AuthProvider>
-          <GeoInitializer />
-          <ClientLayout>{children}</ClientLayout>
-          <CookieConsent />
-          <ServiceWorkerRegister />
-        </AuthProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

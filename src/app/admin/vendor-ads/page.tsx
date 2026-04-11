@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AdminShell from "@/components/admin/admin-shell";
+
 import { Megaphone, Eye, CheckCircle2, XCircle, DollarSign, TrendingUp, Clock } from "lucide-react";
 
 const demoAds = [

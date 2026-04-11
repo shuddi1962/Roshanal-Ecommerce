@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AdminShell from "@/components/admin/admin-shell";
+
 import {
   Calendar, Clock, User, DollarSign,
   Check, X, ChevronLeft, ChevronRight, Filter, Plus, Eye,

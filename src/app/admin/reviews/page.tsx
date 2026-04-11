@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AdminShell from "@/components/admin/admin-shell";
+
 import {
   Star, ThumbsUp, Trash2, CheckCircle2, XCircle,
   MessageSquare, Search, Image as ImageIcon, Flag,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AdminShell from "@/components/admin/admin-shell";
+
 import {
   GripVertical, Eye, EyeOff, Settings, ChevronUp, ChevronDown,
   Image, ShoppingBag, Layers, Star, Megaphone, Tag, Truck,

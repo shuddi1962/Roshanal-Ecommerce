@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { categories } from "@/lib/demo-data";
-import AdminShell from "@/components/admin/admin-shell";
+
 import { insforge } from "@/lib/insforge";
 
 interface DBProduct {

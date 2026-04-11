@@ -18,7 +18,7 @@ import {
   Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AdminShell from "@/components/admin/admin-shell";
+
 
 const permissionModules = [
   "Dashboard", "Products", "Orders", "Customers", "Inventory", "Shipping",

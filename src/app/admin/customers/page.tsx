@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Search, Download, Eye, Mail, ChevronDown, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AdminShell from "@/components/admin/admin-shell";
+
 
 const demoCustomers = [
   { id: "1", name: "John Doe", email: "john@example.com", phone: "+234 801 234 5678", orders: 24, totalSpent: 4250000, loyaltyTier: "Gold", lastOrder: "Apr 2, 2026", status: "active" },

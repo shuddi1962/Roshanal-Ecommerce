@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Search, Download, Upload, Package, AlertTriangle, CheckCircle2, MapPin, ChevronDown, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { products } from "@/lib/demo-data";
-import AdminShell from "@/components/admin/admin-shell";
+
 
 export default function AdminInventoryPage() {
   const [searchQuery, setSearchQuery] = useState("");

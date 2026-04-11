@@ -12,7 +12,7 @@ import {
   Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AdminShell from "@/components/admin/admin-shell";
+
 
 const marketingTabs = [
   { id: "overview", label: "Overview", icon: BarChart3 },

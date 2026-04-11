@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AdminShell from "@/components/admin/admin-shell";
+
 import { Activity, CheckCircle2, AlertTriangle, XCircle, RefreshCcw, Shield, Zap, Globe, Database, Image } from "lucide-react";
 
 interface HealthCheck {

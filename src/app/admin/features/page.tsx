@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import AdminShell from "@/components/admin/admin-shell";
+
 import { ToggleLeft, ToggleRight, Search, Save, Loader2 } from "lucide-react";
 import { insforge } from "@/lib/insforge";
 

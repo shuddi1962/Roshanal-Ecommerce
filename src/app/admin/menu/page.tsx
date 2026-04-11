@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AdminShell from "@/components/admin/admin-shell";
+
 import {
   Plus, GripVertical, Trash2, Edit, ChevronRight,
   Save, Undo,

@@ -1,8 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -15,7 +14,7 @@ import {
   Wallet,
   Bell,
   Search,
-  Globe,
+  ChevronDown,
   LogOut,
   Target,
   Headphones,
@@ -23,15 +22,16 @@ import {
   Star,
   Zap,
   Shield,
+  Globe,
   Palette,
   FileText,
   Bug,
   Building,
+  Eye,
   Gift,
   ClipboardList,
   UserCog,
   Hammer,
-  ChevronDown,
 } from "lucide-react";
 
 const adminNavItems = [
@@ -55,28 +55,13 @@ const adminNavItems = [
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [isSticky, setIsSticky] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsSticky(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const isLoginPage = pathname === "/admin/login";
-
-  if (isLoginPage) {
-    return <>{children}</>;
-  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#0C1A36] text-white flex flex-col fixed h-full">
+      <aside className="w-64 bg-[#0C1A36] text-white flex flex-col">
         <div className="p-4 border-b border-blue-800">
           <Link href="/" className="flex items-center gap-2">
             <span className="font-bold text-lg">RS</span>
@@ -112,9 +97,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 ml-64 flex flex-col">
+      <div className="flex-1 flex flex-col">
         {/* Topbar */}
-        <header className={`bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between ${isSticky ? 'sticky top-0 z-50' : ''}`}>
+        <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AdminShell from "@/components/admin/admin-shell";
+
 import {
   Truck, MapPin, Star, CheckCircle2,
   Eye, Plus, AlertTriangle, Users,

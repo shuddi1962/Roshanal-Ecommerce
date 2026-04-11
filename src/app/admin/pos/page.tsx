@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AdminShell from "@/components/admin/admin-shell";
+
 import {
   Search, Plus, Minus, CreditCard, Banknote, Smartphone,
   QrCode, ShoppingCart, User, Receipt, Clock, Tag,
