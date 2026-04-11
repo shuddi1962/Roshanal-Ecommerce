@@ -45,34 +45,62 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null
 
         const email = (credentials.email as string).toLowerCase().trim()
+        const password = credentials.password as string
 
-        const { data: user, error } = await adminDb
-          .from('users')
-          .select('id, email, name, role, avatar_url, password_hash, two_factor_enabled')
-          .eq('email', email)
-          .single()
-
-        if (error || !user) return null
-
-        const passwordMatch = await bcryptjs.compare(
-          credentials.password as string,
-          (user as { password_hash: string }).password_hash
-        )
-        if (!passwordMatch) return null
-
-        // 2FA check if enabled
-        if ((user as { two_factor_enabled: boolean }).two_factor_enabled) {
-          if (!credentials.totp) return null
-          const isValid = await verifyTOTP(user.id, credentials.totp as string)
-          if (!isValid) return null
+        // Demo user credentials for testing
+        const demoUsers = {
+          'admin@roshanalglobal.com': { password: 'admin123', name: 'Super Admin', role: 'super_admin' as UserRole },
+          'manager@roshanalglobal.com': { password: 'manager123', name: 'Store Manager', role: 'store_manager' as UserRole },
+          'accountant@roshanalglobal.com': { password: 'accountant123', name: 'Accountant', role: 'accountant' as UserRole },
+          'vendor@roshanalglobal.com': { password: 'vendor123', name: 'Test Vendor', role: 'vendor' as UserRole },
+          'customer@test.com': { password: 'customer123', name: 'Test Customer', role: 'customer' as UserRole },
         }
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role as UserRole,
-          avatar: user.avatar_url ?? null,
+        // Check demo users first
+        if (demoUsers[email] && demoUsers[email].password === password) {
+          return {
+            id: email, // Use email as ID for demo
+            email: email,
+            name: demoUsers[email].name,
+            role: demoUsers[email].role,
+            avatar: null,
+          }
+        }
+
+        // Try database authentication if demo credentials don't match
+        try {
+          const { data: user, error } = await adminDb
+            .from('users')
+            .select('id, email, name, role, avatar_url, password_hash, two_factor_enabled')
+            .eq('email', email)
+            .single()
+
+          if (error || !user) return null
+
+          const passwordMatch = await bcryptjs.compare(
+            password,
+            (user as { password_hash: string }).password_hash
+          )
+          if (!passwordMatch) return null
+
+          // 2FA check if enabled
+          if ((user as { two_factor_enabled: boolean }).two_factor_enabled) {
+            if (!credentials.totp) return null
+            const isValid = await verifyTOTP(user.id, credentials.totp as string)
+            if (!isValid) return null
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role as UserRole,
+            avatar: user.avatar_url ?? null,
+          }
+        } catch (dbError) {
+          // If database fails, return null (don't expose demo users as fallback)
+          console.warn('Database authentication failed:', dbError)
+          return null
         }
       },
     }),
