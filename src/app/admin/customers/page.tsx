@@ -78,6 +78,20 @@ export default function AdminCustomersPage() {
     loadCustomers();
   }, []);
 
+  // Loading state
+  if (loading) {
+    return (
+      <AdminShell title="Customers" subtitle="Manage customer profiles">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="w-8 h-8 border-3 border-blue border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-sm text-text-3">Loading customers...</p>
+          </div>
+        </div>
+      </AdminShell>
+    );
+  }
+
   const filtered = customers.filter((c) => {
     if (searchQuery && !c.name.toLowerCase().includes(searchQuery.toLowerCase()) && !c.email.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (tierFilter !== "all" && c.loyalty_tier !== tierFilter) return false;
@@ -399,12 +413,160 @@ export default function AdminCustomersPage() {
           </div>
         </div>
       )}
+
+      {/* Customer Details Modal */}
+      {showCustomerModal && selectedCustomer && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-border">
+              <h2 className="font-syne font-700 text-xl text-text-1">Customer Details</h2>
+              <button
+                onClick={() => setShowCustomerModal(false)}
+                className="p-2 hover:bg-off-white rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {/* Customer Info */}
+              <div className="grid grid-cols-2 gap-6 mb-6">
+                <div>
+                  <p className="text-xs text-text-4 uppercase font-semibold mb-2">Basic Information</p>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-xs text-text-4">Name</p>
+                      <p className="text-sm text-text-1">{selectedCustomer.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-4">Email</p>
+                      <p className="text-sm text-text-1">{selectedCustomer.email}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-4">Phone</p>
+                      <p className="text-sm text-text-1">{selectedCustomer.phone || 'Not provided'}</p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-text-4 uppercase font-semibold mb-2">Account Statistics</p>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-xs text-text-4">Total Orders</p>
+                      <p className="text-sm text-text-1">{selectedCustomer.orders_count}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-4">Total Spent</p>
+                      <p className="text-sm text-text-1">₦{selectedCustomer.total_spent.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-4">Loyalty Tier</p>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${tierColors[selectedCustomer.loyalty_tier]}`}>
+                        {selectedCustomer.loyalty_tier}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Account Details */}
+              <div className="border-t border-border pt-6">
+                <p className="text-xs text-text-4 uppercase font-semibold mb-3">Account Details</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <p className="text-xs text-text-4">Status</p>
+                    <span className={`text-xs font-medium ${selectedCustomer.status === "active" ? "text-success" : "text-text-4"}`}>
+                      {selectedCustomer.status}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-4">Last Order</p>
+                    <p className="text-xs text-text-1">{selectedCustomer.last_order_date ? new Date(selectedCustomer.last_order_date).toLocaleDateString() : 'Never'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-4">Member Since</p>
+                    <p className="text-xs text-text-1">{new Date(selectedCustomer.created_at).toLocaleDateString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-text-4">Customer ID</p>
+                    <p className="text-xs text-text-1 font-mono">{selectedCustomer.id}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-3 mt-6 pt-6 border-t border-border">
+                <Button variant="outline" onClick={() => handleSendEmail(selectedCustomer)}>
+                  <Mail className="w-4 h-4 mr-2" />
+                  Send Email
+                </Button>
+                <Button variant="outline" onClick={() => setShowCustomerModal(false)}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Customer Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl max-w-md w-full mx-4">
+            <div className="flex items-center justify-between p-6 border-b border-border">
+              <h2 className="font-syne font-700 text-xl text-text-1">Add New Customer</h2>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="p-2 hover:bg-off-white rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-text-1 mb-1">Name</label>
+                  <input
+                    type="text"
+                    className="w-full h-10 px-3 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue/20"
+                    placeholder="Enter customer name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-text-1 mb-1">Email</label>
+                  <input
+                    type="email"
+                    className="w-full h-10 px-3 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue/20"
+                    placeholder="Enter email address"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-text-1 mb-1">Phone (Optional)</label>
+                  <input
+                    type="tel"
+                    className="w-full h-10 px-3 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue/20"
+                    placeholder="+234 XXX XXX XXXX"
+                  />
+                </div>
+              </form>
+
+              <div className="flex items-center justify-end gap-3 mt-6">
+                <Button variant="outline" onClick={() => setShowAddModal(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={() => setShowAddModal(false)}>
+                  Add Customer
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
     </AdminShell>
   );
 
-  // Loading state
-  if (loading) {
   // Loading state
   if (loading) {
     return (
@@ -421,6 +583,14 @@ export default function AdminCustomersPage() {
 
   return (
     <AdminShell title="Customers" subtitle="Manage customer profiles">
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="w-8 h-8 border-3 border-blue border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-sm text-text-3">Loading customers...</p>
+        </div>
+      </div>
+    </AdminShell>
+  );
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -678,5 +848,4 @@ export default function AdminCustomersPage() {
     </div>
     </AdminShell>
   );
-}
 }

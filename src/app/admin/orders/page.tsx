@@ -1,7 +1,6 @@
 "use client";
 import AdminShell from "@/components/admin/admin-shell";
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Download,
@@ -394,7 +393,7 @@ export default function AdminOrdersPage() {
                 <div>
                   <p className="text-xs text-text-4 uppercase font-semibold">Status</p>
                   <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium mt-1 ${statusConfig[selectedOrder.status]?.color || statusConfig.pending.color}`}>
-                    {statusConfig[selectedOrder.status]?.icon && <statusConfig[selectedOrder.status].icon className="w-3 h-3" />}
+                    {statusConfig[selectedOrder.status]?.icon && React.createElement(statusConfig[selectedOrder.status].icon, { className: "w-3 h-3" })}
                     {statusConfig[selectedOrder.status]?.label || 'Unknown'}
                   </span>
                 </div>

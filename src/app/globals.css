@@ -129,8 +129,7 @@ footer a:hover {
 }
 
 /* Topbar specific overrides */
-.hidden.lg\\:flex.bg-navy,
-.bg-navy.text-white\\/70 {
+.bg-navy {
   background-color: #0C1A36 !important;
   color: rgba(255, 255, 255, 0.7) !important;
 }
@@ -152,9 +151,7 @@ nav[class*="bg-blue"] * {
 }
 
 /* Notice bar/topbar overrides */
-.bg-navy,
-.bg-navy.text-white\\/70,
-.hidden.lg\\:flex.bg-navy {
+.bg-navy {
   background-color: #0C1A36 !important;
   color: rgba(255, 255, 255, 0.7) !important;
 }
@@ -166,7 +163,6 @@ footer.bg-navy {
 }
 
 footer *,
-footer .text-white\\/70,
 footer p,
 footer span,
 footer div:not(.bg-white):not(.text-blue):not(.text-red) {
