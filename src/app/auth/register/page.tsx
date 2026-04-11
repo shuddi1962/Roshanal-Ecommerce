@@ -17,11 +17,10 @@ import {
   Smartphone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/store/auth-store";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { signUp, signInWithOAuth, error, clearError } = useAuthStore();
+  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [accountType, setAccountType] = useState<"customer" | "vendor">("customer");
@@ -45,34 +44,40 @@ export default function RegisterPage() {
     e.preventDefault();
     if (form.password !== form.confirmPassword) return;
 
-    clearError();
+    setError(null);
     setIsSubmitting(true);
     try {
-      const result = await signUp({
-        email: form.email,
-        password: form.password,
-        name: `${form.firstName} ${form.lastName}`,
-        phone: form.phone,
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          name: `${form.firstName} ${form.lastName}`,
+          phone: form.phone,
+          role: accountType,
+        }),
       });
 
-      if (result.requireVerification) {
-        router.push(`/auth/verify-email?email=${encodeURIComponent(form.email)}`);
-      } else {
-        router.push("/account");
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed');
       }
-    } catch {
-      // error is set in the store
+
+      // Registration successful - redirect to login
+      router.push('/auth/login?message=Registration successful! Please log in.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleOAuth = async (provider: "google" | "github") => {
-    try {
-      await signInWithOAuth(provider);
-    } catch {
-      // error is set in the store
-    }
+    setError(`${provider.charAt(0).toUpperCase() + provider.slice(1)} OAuth not implemented yet`);
   };
 
   const passwordStrength = (pwd: string) => {
