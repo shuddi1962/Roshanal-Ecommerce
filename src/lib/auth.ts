@@ -47,7 +47,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const email = (credentials.email as string).toLowerCase().trim()
         const password = credentials.password as string
 
-        // Demo user credentials for testing
+        // Demo user credentials for testing - this is the primary authentication method
         const demoUsers = {
           'admin@roshanalglobal.com': { password: 'admin123', name: 'Super Admin', role: 'super_admin' as UserRole },
           'manager@roshanalglobal.com': { password: 'manager123', name: 'Store Manager', role: 'store_manager' as UserRole },
@@ -56,8 +56,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           'customer@test.com': { password: 'customer123', name: 'Test Customer', role: 'customer' as UserRole },
         }
 
-        // Check demo users first
+        // Check demo users first - this is the main authentication method
         if (demoUsers[email] && demoUsers[email].password === password) {
+          console.log(`Demo user authenticated: ${email}`)
           return {
             id: email, // Use email as ID for demo
             email: email,
@@ -67,29 +68,36 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
         }
 
-        // Try database authentication if demo credentials don't match
+        // If not a demo user, try database authentication as fallback
         try {
           const { data: user, error } = await adminDb
             .from('users')
-            .select('id, email, name, role, avatar_url, password_hash, two_factor_enabled')
+            .select('id, email, name, role, avatar_url, password, email_verified')
             .eq('email', email)
             .single()
 
-          if (error || !user) return null
-
-          const passwordMatch = await bcryptjs.compare(
-            password,
-            (user as { password_hash: string }).password_hash
-          )
-          if (!passwordMatch) return null
-
-          // 2FA check if enabled
-          if ((user as { two_factor_enabled: boolean }).two_factor_enabled) {
-            if (!credentials.totp) return null
-            const isValid = await verifyTOTP(user.id, credentials.totp as string)
-            if (!isValid) return null
+          if (error || !user) {
+            console.log(`Database auth failed for ${email}: user not found`)
+            return null
           }
 
+          // Check if user is verified and active
+          if (!user.email_verified || user.is_active === false) {
+            console.log(`Database auth failed for ${email}: user not verified or inactive`)
+            return null
+          }
+
+          // Check password (use password field for InsForge)
+          const passwordMatch = await bcryptjs.compare(
+            password,
+            (user as { password: string }).password
+          )
+          if (!passwordMatch) {
+            console.log(`Database auth failed for ${email}: invalid password`)
+            return null
+          }
+
+          console.log(`Database user authenticated: ${email}`)
           return {
             id: user.id,
             email: user.email,
@@ -98,7 +106,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             avatar: user.avatar_url ?? null,
           }
         } catch (dbError) {
-          // If database fails, return null (don't expose demo users as fallback)
           console.warn('Database authentication failed:', dbError)
           return null
         }
@@ -130,7 +137,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   pages: {
     signIn: '/auth/login',
-    error: '/auth/login',
+    error: '/auth/error',
   },
 })
 
