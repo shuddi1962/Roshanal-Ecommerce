@@ -43,7 +43,8 @@ export default function MainHeader() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden text-text-3 hover:text-blue transition-colors"
+          className="lg:hidden text-text-3 hover:text-blue transition-colors p-2"
+          aria-label="Toggle mobile menu"
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>

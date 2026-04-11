@@ -48,6 +48,54 @@ body {
   background-color: #F3F5FB;
   color: #080E22;
   font-family: var(--font-manrope), sans-serif;
+}
+
+/* Ensure brand colors are applied */
+.bg-navy { background-color: #0C1A36 !important; }
+.text-navy { color: #0C1A36 !important; }
+.bg-blue { background-color: #1641C4 !important; }
+.text-blue { color: #1641C4 !important; }
+.border-blue { border-color: #1641C4 !important; }
+.bg-red { background-color: #C8191C !important; }
+.text-red { color: #C8191C !important; }
+.bg-brand-navy { background-color: #0C1A36 !important; }
+.text-brand-navy { color: #0C1A36 !important; }
+
+/* Ensure fonts load properly */
+.font-syne { font-family: var(--font-syne), sans-serif !important; }
+.font-manrope { font-family: var(--font-manrope), sans-serif !important; }
+
+/* Navigation visibility */
+nav.bg-blue {
+  background-color: #1641C4 !important;
+  color: white !important;
+}
+
+/* Ensure footer is visible */
+footer.bg-navy {
+  background-color: #0C1A36 !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Mobile menu button visibility */
+button[class*="mobile-menu"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Navigation visibility */
+nav {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Ensure all text is sharp */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;

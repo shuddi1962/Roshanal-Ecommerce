@@ -238,7 +238,7 @@ export default function Navigation() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="bg-blue hidden lg:block">
+      <nav className="bg-blue block">
         <div className="w-full max-w-[1440px] mx-auto px-4 flex items-center h-12">
           {/* ALL DEPARTMENTS - Mega Menu */}
           <div className="relative"
