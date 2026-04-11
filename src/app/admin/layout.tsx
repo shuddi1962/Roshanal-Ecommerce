@@ -1,36 +1,51 @@
-import React from 'react'
-import { redirect } from 'next/navigation'
-import { auth } from '@/lib/auth'
-import AdminSidebar from '@/components/admin/AdminSidebar'
-import AdminTopbar from '@/components/admin/AdminTopbar'
+"use client";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth()
+import { useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useAuthStore } from "@/store/auth-store";
 
-  // Only allow admin-role users
-  const adminRoles = [
-    'super_admin', 'store_manager', 'accountant', 'marketing_manager',
-    'technical_team', 'field_technical_team', 'customer_support',
-    'content_editor', 'delivery_boy', 'warehouse_staff',
-    'location_manager', 'sales_staff',
-  ]
+const ADMIN_ROLES = ["super-admin", "store-manager", "accountant", "marketing-manager", "technical-team", "customer-support", "content-editor", "warehouse-staff", "location-manager", "sales-staff"];
 
-  if (!session?.user || !adminRoles.includes(session.user.role)) {
-    redirect('/auth/login?callbackUrl=/admin/dashboard')
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { user, loading } = useAuthStore();
+
+  // Allow the login page to render without auth
+  const isLoginPage = pathname === "/admin/login";
+
+  useEffect(() => {
+    if (loading || isLoginPage) return;
+
+    if (!user) {
+      router.replace("/admin/login");
+      return;
+    }
+
+    if (!ADMIN_ROLES.includes(user.role)) {
+      router.replace("/admin/login");
+    }
+  }, [user, loading, isLoginPage, router]);
+
+  // Login page renders without guard
+  if (isLoginPage) return <>{children}</>;
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-off-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 border-3 border-blue/30 border-t-blue rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-sm text-text-3">Loading admin panel...</p>
+        </div>
+      </div>
+    );
   }
 
-  return (
-    <div className="flex h-screen bg-brand-offwhite overflow-hidden">
-      {/* Sidebar */}
-      <AdminSidebar userRole={session.user.role} />
+  // Not authenticated or wrong role
+  if (!user || !ADMIN_ROLES.includes(user.role)) {
+    return null;
+  }
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <AdminTopbar user={session.user} />
-        <main className="flex-1 overflow-y-auto p-6">
-          {children}
-        </main>
-      </div>
-    </div>
-  )
+  return <>{children}</>;
 }
