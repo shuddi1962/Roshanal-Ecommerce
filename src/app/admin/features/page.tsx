@@ -1,4 +1,5 @@
 "use client";
+import AdminShell from "@/components/admin/admin-shell";
 
 import { useState, useEffect, useCallback } from "react";
 

@@ -1,4 +1,5 @@
 "use client";
+import AdminShell from "@/components/admin/admin-shell";
 
 import { useState } from "react";
 import Link from "next/link";

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import AdminShell from "@/components/admin/admin-shell";
 import {
   TrendingUp, DollarSign, ShoppingCart, Users, Eye,
   Package, ArrowUpRight, ArrowDownRight, Smartphone, Monitor,

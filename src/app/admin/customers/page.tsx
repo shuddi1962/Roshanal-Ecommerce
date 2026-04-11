@@ -1,4 +1,5 @@
 "use client";
+import AdminShell from "@/components/admin/admin-shell";
 
 import { useState } from "react";
 import { Search, Download, Eye, Mail, ChevronDown, UserPlus } from "lucide-react";
