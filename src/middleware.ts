@@ -31,12 +31,12 @@ export async function middleware(request: NextRequest) {
     if (session) {
       const role = (session.role as string) ?? ''
       if (ADMIN_ROLES.includes(role)) {
-        return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+        return NextResponse.redirect(new URL('/admin', request.url))
       }
       if (VENDOR_ROLES.includes(role)) {
-        return NextResponse.redirect(new URL('/vendor/dashboard', request.url))
+        return NextResponse.redirect(new URL('/vendor', request.url))
       }
-      return NextResponse.redirect(new URL('/account/dashboard', request.url))
+      return NextResponse.redirect(new URL('/account', request.url))
     }
     return NextResponse.next()
   }
