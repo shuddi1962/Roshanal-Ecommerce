@@ -63,13 +63,7 @@ const tabs = [
   { id: "vat", label: "VAT Reports" },
 ];
 
-// Calculate KPIs dynamically
-const kpis = [
-  { label: "Total Revenue", value: `₦${totalRevenue.toLocaleString()}`, change: "+12.5%", up: true, icon: DollarSign },
-  { label: "Net Profit", value: `₦${netProfit.toLocaleString()}`, change: netProfit > 0 ? "+8.3%" : "-5.2%", up: netProfit > 0, icon: TrendingUp },
-  { label: "Total Expenses", value: `₦${totalExpenses.toLocaleString()}`, change: "+3.1%", up: false, icon: TrendingDown },
-  { label: "Outstanding", value: `₦${outstandingInvoices.toLocaleString()}`, change: "-15.2%", up: true, icon: Receipt },
-];
+
 
 export default function FinancePage() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -154,6 +148,14 @@ export default function FinancePage() {
   const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
   const netProfit = totalRevenue - totalExpenses;
   const outstandingInvoices = invoices.filter(i => i.status === "pending" || i.status === "overdue").reduce((sum, i) => sum + i.amount, 0);
+
+  // Calculate KPIs dynamically
+  const kpis = [
+    { label: "Total Revenue", value: `₦${totalRevenue.toLocaleString()}`, change: "+12.5%", up: true, icon: DollarSign },
+    { label: "Net Profit", value: `₦${netProfit.toLocaleString()}`, change: netProfit > 0 ? "+8.3%" : "-5.2%", up: netProfit > 0, icon: TrendingUp },
+    { label: "Total Expenses", value: `₦${totalExpenses.toLocaleString()}`, change: "+3.1%", up: false, icon: TrendingDown },
+    { label: "Outstanding", value: `₦${outstandingInvoices.toLocaleString()}`, change: "-15.2%", up: true, icon: Receipt },
+  ];
 
   // Handlers
   const handleExport = (type: string) => {
