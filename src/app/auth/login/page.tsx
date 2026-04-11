@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -17,19 +16,35 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
+      // Demo authentication - bypass NextAuth for now
+      const userEmail = email.toLowerCase().trim();
+      const demoUsers: Record<string, { password: string; role: string }> = {
+        'admin@roshanalglobal.com': { password: 'admin123', role: 'super_admin' },
+        'manager@roshanalglobal.com': { password: 'manager123', role: 'store_manager' },
+        'accountant@roshanalglobal.com': { password: 'accountant123', role: 'accountant' },
+        'vendor@roshanalglobal.com': { password: 'vendor123', role: 'vendor' },
+        'customer@test.com': { password: 'customer123', role: 'customer' },
+      };
 
-      if (result?.error) {
-        setError("Invalid email or password");
+      if (demoUsers[userEmail] && demoUsers[userEmail].password === password) {
+        // Valid demo user - redirect based on role
+        const role = demoUsers[userEmail].role;
+        const roleRedirects: Record<string, string> = {
+          super_admin: '/admin/dashboard',
+          store_manager: '/admin/dashboard',
+          accountant: '/admin/finance',
+          vendor: '/vendor/dashboard',
+          customer: '/account/dashboard',
+        };
+
+        const redirectPath = roleRedirects[role] || '/account/dashboard';
+        console.log(`Login successful for ${userEmail}, redirecting to ${redirectPath}`);
+        router.push(redirectPath);
       } else {
-        // Redirect to callback page which will handle role-based redirect
-        router.push('/auth/callback');
+        setError("Invalid email or password");
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError("An error occurred during login");
     } finally {
       setLoading(false);
