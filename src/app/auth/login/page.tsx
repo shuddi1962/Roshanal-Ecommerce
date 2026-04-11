@@ -26,7 +26,8 @@ export default function LoginPage() {
       if (result?.error) {
         setError("Invalid email or password");
       } else {
-        router.push("/");
+        // Redirect to callback page which will handle role-based redirect
+        router.push('/auth/callback');
       }
     } catch (err) {
       setError("An error occurred during login");
