@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ClientLayout from "@/components/layout/client-layout";
 
 export const metadata: Metadata = {
   title: {
@@ -42,7 +41,27 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="antialiased bg-off-white text-text-1">
-        <ClientLayout>{children}</ClientLayout>
+        <div className="min-h-screen">
+          <header className="bg-white border-b border-gray-200">
+            <div className="max-w-7xl mx-auto px-4 py-4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-xl font-bold text-blue-600">Roshanal Global</h1>
+                <nav className="space-x-4">
+                  <a href="/" className="text-gray-600 hover:text-blue-600">Home</a>
+                  <a href="/shop" className="text-gray-600 hover:text-blue-600">Shop</a>
+                  <a href="/account" className="text-gray-600 hover:text-blue-600">Account</a>
+                  <a href="/admin" className="text-gray-600 hover:text-blue-600">Admin</a>
+                </nav>
+              </div>
+            </div>
+          </header>
+          <main>{children}</main>
+          <footer className="bg-gray-800 text-white py-8 mt-12">
+            <div className="max-w-7xl mx-auto px-4 text-center">
+              <p>&copy; 2026 Roshanal Global. All rights reserved.</p>
+            </div>
+          </footer>
+        </div>
       </body>
     </html>
   );
