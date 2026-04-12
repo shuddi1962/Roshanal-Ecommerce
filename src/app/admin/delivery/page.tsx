@@ -174,8 +174,8 @@ export default function AdminDeliveryPage() {
           {[
             { label: "Total Riders", value: riders.length, icon: Users, color: "text-blue" },
             { label: "Available Now", value: riders.filter((r) => r.status === "available").length, icon: CheckCircle2, color: "text-green-600" },
-            { label: "Active Deliveries", value: demoDeliveries.filter((d) => d.status === "in_transit").length, icon: Truck, color: "text-yellow-600" },
-            { label: "Pending Assignment", value: demoDeliveries.filter((d) => d.status === "pending").length, icon: AlertTriangle, color: "text-red" },
+            { label: "Active Deliveries", value: deliveries.filter((d) => d.status === "in_transit").length, icon: Truck, color: "text-yellow-600" },
+            { label: "Pending Assignment", value: deliveries.filter((d) => d.status === "pending").length, icon: AlertTriangle, color: "text-red" },
           ].map((s) => (
             <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100">
               <div className="flex items-center gap-2 mb-2"><s.icon size={16} className={s.color} /><span className="text-xs text-text-4">{s.label}</span></div>
@@ -245,11 +245,11 @@ export default function AdminDeliveryPage() {
                 ))}
               </tr></thead>
               <tbody>
-                {demoDeliveries.map((d) => (
+                {deliveries.map((d) => (
                   <tr key={d.id} className="border-b border-gray-50 hover:bg-gray-50/50">
                     <td className="p-4 font-mono text-xs">{d.id}</td>
-                    <td className="p-4 text-blue font-medium">{d.order}</td>
-                    <td className="p-4">{d.customer}</td>
+                    <td className="p-4 text-blue font-medium">{d.order_id}</td>
+                    <td className="p-4">{d.customer_name}</td>
                     <td className="p-4 text-text-3 text-xs max-w-[200px] truncate">{d.address}</td>
                      <td className="p-4">{d.rider_name || <select onChange={(e) => assignRider(d.id, parseInt(e.target.value))} className="text-xs border border-gray-200 rounded px-2 py-1" defaultValue="">
                        <option value="">Assign Rider</option>
