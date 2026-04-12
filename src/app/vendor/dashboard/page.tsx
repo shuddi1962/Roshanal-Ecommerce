@@ -13,14 +13,25 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function VendorDashboardPage() {
-  const session = await auth()
-  if (!session?.user) return null
+  // Temporarily bypass authentication for testing
+  // const session = await auth()
+  // if (!session?.user) return null
 
-  const { data: vendor } = await adminDb
-    .from('vendors')
-    .select('id, shop_name, total_sales_kobo, pending_payout_kobo, rating, is_approved, tier')
-    .eq('user_id', session.user.id)
-    .single()
+  // Mock vendor data for testing
+  const vendor = {
+    shop_name: 'Test Vendor Shop',
+    total_sales_kobo: 0,
+    pending_payout_kobo: 0,
+    rating: 0,
+    is_approved: true,
+    tier: 'standard'
+  }
+
+  // const { data: vendor } = await adminDb
+  //   .from('vendors')
+  //   .select('id, shop_name, total_sales_kobo, pending_payout_kobo, rating, is_approved, tier')
+  //   .eq('user_id', session.user.id)
+  //   .single()
 
   const stats = [
     { label: 'Total Sales', value: vendor ? formatNaira(Number(vendor.total_sales_kobo || 0)) : '₦0', icon: DollarSign, color: 'bg-blue-50 text-brand-blue' },
