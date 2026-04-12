@@ -172,8 +172,8 @@ export default function AdminDeliveryPage() {
       <div className="space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "Total Riders", value: demoRiders.length, icon: Users, color: "text-blue" },
-            { label: "Available Now", value: demoRiders.filter((r) => r.status === "available").length, icon: CheckCircle2, color: "text-green-600" },
+            { label: "Total Riders", value: riders.length, icon: Users, color: "text-blue" },
+            { label: "Available Now", value: riders.filter((r) => r.status === "available").length, icon: CheckCircle2, color: "text-green-600" },
             { label: "Active Deliveries", value: demoDeliveries.filter((d) => d.status === "in_transit").length, icon: Truck, color: "text-yellow-600" },
             { label: "Pending Assignment", value: demoDeliveries.filter((d) => d.status === "pending").length, icon: AlertTriangle, color: "text-red" },
           ].map((s) => (
@@ -204,7 +204,7 @@ export default function AdminDeliveryPage() {
 
         {tab === "riders" && (
           <div className="space-y-3">
-            {demoRiders.map((rider) => (
+            {riders.map((rider) => (
               <div key={rider.id} className="bg-white rounded-xl p-4 border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold ${
