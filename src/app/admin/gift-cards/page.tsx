@@ -146,7 +146,7 @@ export default function AdminGiftCardsPage() {
             { label: "Total Issued", value: `₦${(totalValue / 1000).toFixed(0)}K`, icon: Gift, color: "text-blue" },
             { label: "Total Redeemed", value: `₦${(totalRedeemed / 1000).toFixed(0)}K`, icon: TrendingUp, color: "text-green-600" },
             { label: "Active Cards", value: activeCount, icon: CheckCircle2, color: "text-blue" },
-            { label: "Total Cards", value: demoCards.length, icon: DollarSign, color: "text-purple-600" },
+            { label: "Total Cards", value: cards.length, icon: DollarSign, color: "text-purple-600" },
           ].map((s) => (
             <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100">
               <div className="flex items-center gap-2 mb-2">
