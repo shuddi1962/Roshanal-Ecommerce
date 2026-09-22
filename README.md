@@ -34,14 +34,17 @@ NEXTAUTH_URL=https://your-domain.com
 ENCRYPTION_KEY=32-char-random-string
 ```
 
-## Test Accounts (after seeding)
+## Test Accounts (demo login — use `/auth/login`)
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@roshanalglobal.com | admin123 |
-| Staff | staff@roshanalglobal.com | staff123 |
-| Customer | customer@test.com | customer123 |
+| Super Admin | admin@roshanalglobal.com | admin123 |
+| Store Manager | manager@roshanalglobal.com | manager123 |
+| Accountant | accountant@roshanalglobal.com | accountant123 |
 | Vendor | vendor@roshanalglobal.com | vendor123 |
+| Customer | customer@test.com | customer123 |
+
+> Source of truth: `src/lib/auth.ts` and `src/app/auth/login/page.tsx` (demoUsers). Do NOT commit real `.env.local` secrets here.
 
 ## Features
 
