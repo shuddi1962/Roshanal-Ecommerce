@@ -154,7 +154,7 @@ export default function AdminReviewsPage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div className="bg-white rounded-xl p-4 border border-gray-100">
             <p className="text-xs text-text-4 mb-1">Total Reviews</p>
-            <p className="text-2xl font-bold text-text-1">{demoReviews.length}</p>
+            <p className="text-2xl font-bold text-text-1">{reviews.length}</p>
           </div>
           <div className="bg-white rounded-xl p-4 border border-gray-100">
             <p className="text-xs text-text-4 mb-1">Average Rating</p>
@@ -165,15 +165,15 @@ export default function AdminReviewsPage() {
           </div>
           <div className="bg-white rounded-xl p-4 border border-gray-100">
             <p className="text-xs text-text-4 mb-1">Pending</p>
-            <p className="text-2xl font-bold text-yellow-600">{demoReviews.filter((r) => r.status === "pending").length}</p>
+            <p className="text-2xl font-bold text-yellow-600">{reviews.filter((r) => r.status === "pending").length}</p>
           </div>
           <div className="bg-white rounded-xl p-4 border border-gray-100">
             <p className="text-xs text-text-4 mb-1">With Photos</p>
-            <p className="text-2xl font-bold text-blue">{demoReviews.filter((r) => r.images > 0).length}</p>
+            <p className="text-2xl font-bold text-blue">{reviews.filter((r) => r.images > 0).length}</p>
           </div>
           <div className="bg-white rounded-xl p-4 border border-gray-100">
             <p className="text-xs text-text-4 mb-1">Flagged</p>
-            <p className="text-2xl font-bold text-red">{demoReviews.filter((r) => r.status === "flagged").length}</p>
+            <p className="text-2xl font-bold text-red">{reviews.filter((r) => r.status === "flagged").length}</p>
           </div>
         </div>
 
